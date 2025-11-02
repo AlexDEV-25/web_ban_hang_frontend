@@ -1,3 +1,4 @@
+import List from "../category/List";
 function Header() {
     return (
         <header>
@@ -19,9 +20,7 @@ function Header() {
                                     Category
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a className="dropdown-item" href="#">Category 1</a></li>
-                                    <li><a className="dropdown-item" href="#">Category 2</a></li>
-                                    <li><a className="dropdown-item" href="#">Category 3</a></li>
+                                    <List />
                                 </ul>
                             </li>
                             <li className="nav-item">
