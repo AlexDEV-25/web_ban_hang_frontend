@@ -5,11 +5,11 @@ interface Props {
 }
 
 
-const List: React.FC<Props> = ({ category }) => {
+const CategoryProperties: React.FC<Props> = ({ category }) => {
     return (
         <>
             <li><a className="dropdown-item" href="#">{category.categoryName}</a></li>
         </>
     )
 };
-export default List;
+export default CategoryProperties;

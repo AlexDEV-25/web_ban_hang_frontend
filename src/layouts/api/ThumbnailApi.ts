@@ -1,17 +1,27 @@
-import type { Thumbnail } from "../../models/Thumbnail";
+import { Thumbnail } from "../../models/Thumbnail";
 import my_request from "./Request";
 
-export async function getAllThumbnail(id: number): Promise<Thumbnail[]> {
+const link: string = `http://localhost:8080/products/`;
+
+
+export async function getAllThumbnailForOneProduct(id: number): Promise<Thumbnail[]> {
     // Tạo mảng để lưu trữ các thumbnail
-    const link: string = `http://localhost:8080/products/${id}/thumbnails`;
     const listThumbnail: Thumbnail[] = [];
     // Gọi API để lấy dữ liệu
-    const response = await my_request(link);
+    const response = await my_request(link + id + "/thumbnails");
     // Lấy dữ liệu từ API
     const responseData = response._embedded.thumbnails;
     // Duyệt qua mảng dữ liệu và thêm vào mảng listThumbnail
-    for (const thumbnail of responseData) {
-        listThumbnail.push(thumbnail);
+    for (const data of responseData) {
+        listThumbnail.push(new Thumbnail(data.id, data.thumbnailName, data.icon, data.link, data.data));
     }
     return listThumbnail as Thumbnail[];
 }
+
+export async function getOneThumbnailForOneProduct(id: number): Promise<Thumbnail> {
+    let thumbnail: Thumbnail | null = null;
+    const listThumbnail = await getAllThumbnailForOneProduct(id);
+    thumbnail = listThumbnail[0];
+    return thumbnail;
+}
+

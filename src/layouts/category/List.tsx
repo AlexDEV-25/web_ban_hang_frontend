@@ -27,16 +27,12 @@ const List: React.FC = () => {
     if (error) {
         return <div className="text-danger text-center mt-5">Lỗi: {error}</div>;
     }
-    console.log(categories);
     return (
         <>
-            {categories.map((category) => (
-                <CategoryProperties key={category.id} category={category} />
-            ))}
+            {categories.map((category) => {
+                return <CategoryProperties key={category.id} category={category} />
+            })}
         </>
-
-
-
     );
 };
 

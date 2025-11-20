@@ -2,9 +2,9 @@ import { Category } from "../../models/Category";
 import my_request from "./Request";
 
 
-const link: string = "http://localhost:8080/categories";
+let link: string = "http://localhost:8080/categories";
 
-export async function getAllCategory(): Promise<Category[]> {
+export async function getCategory(link: string): Promise<Category[]> {
     // Tạo mảng để lưu trữ các danh mục
     const listCategory: Category[] = [];
     // Gọi API để lấy dữ liệu
@@ -12,8 +12,12 @@ export async function getAllCategory(): Promise<Category[]> {
     // Lấy dữ liệu từ API
     const responseData = response._embedded.productCategoties;
     // Duyệt qua mảng dữ liệu và thêm vào mảng listCategory
-    for (const category of responseData) {
-        listCategory.push(category);
+    for (const data of responseData) {
+        listCategory.push(new Category(data.id, data.categoryName, data.hide));
     }
     return listCategory as Category[];
+}
+
+export async function getAllCategory(): Promise<Category[]> {
+    return getCategory(link);
 }

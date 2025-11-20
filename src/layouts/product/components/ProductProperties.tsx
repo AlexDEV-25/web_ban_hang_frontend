@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "../../../models/Product";
-import { getAllThumbnail } from "../../../layouts/api/ThumbnailApi";
+import { getOneThumbnailForOneProduct } from "../../../layouts/api/ThumbnailApi";
 import type { Thumbnail } from "../../../models/Thumbnail";
 interface Props {
     product: Product; // ✅ chỉ nhận 1 sản phẩm duy nhất
 }
 
 const ProductProperties: React.FC<Props> = ({ product }) => {
-    const [thumbnails, setThumbnail] = useState<Thumbnail[]>([]);
+    const [thumbnail, setThumbnail] = useState<Thumbnail>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
         // Gọi API
-        getAllThumbnail(product.id)
-            .then((thumbnails) => {
-                setThumbnail(thumbnails);
+        getOneThumbnailForOneProduct(product.id)
+            .then((thumbnail) => {
+                setThumbnail(thumbnail);
                 setLoading(false);
             })
             .catch((err) => {
@@ -32,8 +32,8 @@ const ProductProperties: React.FC<Props> = ({ product }) => {
         return <div className="text-danger text-center mt-5">Lỗi: {error}</div>;
     }
     let link: string = "https://ericavietnam.com/wp-content/uploads/2024/09/O1CN01rEbPin24qUO0Iwz6z_4198917442-0-cib.jpg";
-    if (thumbnails[0] && thumbnails[0].link) {
-        link = thumbnails[0].link;
+    if (thumbnail && thumbnail.link) {
+        link = thumbnail.link;
     }
 
     return (
