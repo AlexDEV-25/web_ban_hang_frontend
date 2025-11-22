@@ -36,6 +36,14 @@ export async function getProductPage(page: number, size: number): Promise<Produc
     return getproduct(BaseLink);
 }
 
+export async function findProduct(name: string): Promise<Product[]> {
+    if (name === "") {
+        return getAllProduct();
+    }
+    return getproduct(link + "/search/findByProductNameContaining?&size=6&page=0&productName=" + name);
+}
+
+
 export async function getTotalPage(): Promise<number> {
     const response = await my_request(link);
     const totalPage = response.page.totalPages;

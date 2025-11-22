@@ -1,5 +1,11 @@
 import List from "../category/List";
-function Header() {
+import { useState } from "react";
+interface Props {
+    keyWords: string;
+    setKeyWords: (keyWords: string) => void;
+}
+const Header: React.FC<Props> = (props: Props) => {
+    const [TempKeyWords, setTempKeyWords] = useState("");
     return (
         <header>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,8 +44,10 @@ function Header() {
                                 type="search"
                                 placeholder="Search"
                                 aria-label="Search"
+                                value={TempKeyWords}
+                                onChange={(e) => setTempKeyWords(e.target.value)}
                             />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
+                            <button onClick={() => props.setKeyWords(TempKeyWords)} className="btn btn-outline-success" type="button">Search</button>
                         </form>
 
                         {/* Giỏ hàng */}

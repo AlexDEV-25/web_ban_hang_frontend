@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ProductProperties from "./components/ProductProperties";
 import type { Product } from "../../models/Product";
-import { getProductPage, getTotalPage } from "../api/ProductApi";
+import { getProductPage, getTotalPage, findProduct } from "../api/ProductApi";
 import Pagination from "../utils/Pagination";
-
-const List: React.FC = () => {
+interface Props {
+    keyWords: string;
+}
+const List: React.FC<Props> = (props: Props) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -18,17 +20,35 @@ const List: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        setLoading(true);
-        getProductPage(pageNow - 1, 6) // page index từ 0, mỗi trang 6 sản phẩm
-            .then((data) => {
-                setProducts(data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setError(err.message || "Lỗi tải dữ liệu");
-                setLoading(false);
-            });
-    }, [pageNow]);
+        if (props.keyWords.trim() !== "") {
+            setLoading(true);
+            findProduct(props.keyWords)
+                .then((data) => {
+                    setProducts(data);
+                    setLoading(false);
+                }).catch((err) => {
+                    setError(err.message || "Lỗi tải dữ liệu");
+                    setLoading(false);
+                });
+        }
+    }, [props.keyWords]);
+
+    useEffect(() => {
+        console.log("pageNow: " + pageNow);
+        console.log("props.keyWords: " + props.keyWords);
+        if (props.keyWords.trim() === "") {
+            setLoading(true);
+            getProductPage(pageNow - 1, 6)
+                .then((data) => {
+                    setProducts(data);
+                    setLoading(false);
+                }).catch((err) => {
+                    setError(err.message || "Lỗi tải dữ liệu");
+                    setLoading(false);
+                });
+        }
+    }, [pageNow, props.keyWords]);
+
 
     const changePage = (page: number) => {
         if (page >= 1 && page <= totalPage) {
@@ -38,7 +58,17 @@ const List: React.FC = () => {
 
     if (loading) return <div className="text-center mt-5">Đang tải dữ liệu...</div>;
     if (error) return <div className="text-danger text-center mt-5">Lỗi: {error}</div>;
-
+    if (products.length === 0) {
+        return (
+            <div className="text-center mt-5">
+                <div className="p-4 bg-light rounded-3 shadow-sm d-inline-block">
+                    <i className="fas fa-box-open fa-3x text-secondary mb-3"></i>
+                    <h4 className="fw-bold text-secondary">Không có sản phẩm</h4>
+                    <p className="text-muted mb-0">Hãy thử tìm kiếm với từ khóa khác.</p>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="container my-4">
             <h2 className="text-center mb-4 fw-bold">🛍️ Danh sách sản phẩm</h2>

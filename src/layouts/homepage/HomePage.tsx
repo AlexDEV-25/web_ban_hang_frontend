@@ -1,12 +1,15 @@
 import Banner from "./components/Banner"
 import Carousel from "./components/Carousel"
 import List from '../product/List'
-function HomePage() {
+interface Props {
+    keyWords: string;
+}
+const HomePage: React.FC<Props> = (props: Props) => {
     return (
         <div>
             <Banner />
             <Carousel />
-            <List />
+            <List keyWords={props.keyWords} />
         </div>
     )
 }
