@@ -1,11 +1,16 @@
 import List from "../category/List";
 import { useState } from "react";
-interface Props {
-    keyWords: string;
-    setKeyWords: (keyWords: string) => void;
-}
-const Header: React.FC<Props> = (props: Props) => {
+import { useContext } from "react";
+import { AppContext } from "../../AppContext";
+
+const Header: React.FC = () => {
     const [TempKeyWords, setTempKeyWords] = useState("");
+
+    const ctx = useContext(AppContext);
+    if (!ctx) return null;
+
+    const { setKeyWords } = ctx;
+
     return (
         <header>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -47,7 +52,7 @@ const Header: React.FC<Props> = (props: Props) => {
                                 value={TempKeyWords}
                                 onChange={(e) => setTempKeyWords(e.target.value)}
                             />
-                            <button onClick={() => props.setKeyWords(TempKeyWords)} className="btn btn-outline-success" type="button">Search</button>
+                            <button onClick={() => setKeyWords(TempKeyWords)} className="btn btn-outline-success" type="button">Search</button>
                         </form>
 
                         {/* Giỏ hàng */}

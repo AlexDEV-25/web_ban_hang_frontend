@@ -36,12 +36,20 @@ export async function getProductPage(page: number, size: number): Promise<Produc
     return getproduct(BaseLink);
 }
 
-export async function findProduct(name: string): Promise<Product[]> {
+export async function findProductByName(name: string): Promise<Product[]> {
     if (name === "") {
         return getAllProduct();
     }
     return getproduct(link + "/search/findByProductNameContaining?&size=6&page=0&productName=" + name);
 }
+
+export async function getProductByCategory(id: number): Promise<Product[]> {
+    if (id === 0) {
+        return getAllProduct();
+    }
+    return getproduct(link + "/search/findByCategories_Id?categoryId=" + id + "&size=6&page=0");
+}
+
 
 
 export async function getTotalPage(): Promise<number> {

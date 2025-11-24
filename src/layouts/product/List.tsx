@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ProductProperties from "./components/ProductProperties";
 import type { Product } from "../../models/Product";
-import { getProductPage, getTotalPage, findProduct } from "../api/ProductApi";
+import { getProductPage, getTotalPage, findProductByName, getProductByCategory } from "../api/ProductApi";
 import Pagination from "../utils/Pagination";
-interface Props {
-    keyWords: string;
-}
-const List: React.FC<Props> = (props: Props) => {
+import { AppContext } from "./../../AppContext"
+
+const List: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [pageNow, setPageNow] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const ctx = useContext(AppContext);
+    if (!ctx) return null;
+
+    const { keyWords, categoryId } = ctx;
 
     useEffect(() => {
         getTotalPage().then((data) => {
@@ -20,9 +23,9 @@ const List: React.FC<Props> = (props: Props) => {
     }, []);
 
     useEffect(() => {
-        if (props.keyWords.trim() !== "") {
+        if (keyWords.trim() !== "") {
             setLoading(true);
-            findProduct(props.keyWords)
+            findProductByName(keyWords)
                 .then((data) => {
                     setProducts(data);
                     setLoading(false);
@@ -31,12 +34,12 @@ const List: React.FC<Props> = (props: Props) => {
                     setLoading(false);
                 });
         }
-    }, [props.keyWords]);
+    }, [keyWords]);
 
     useEffect(() => {
         console.log("pageNow: " + pageNow);
-        console.log("props.keyWords: " + props.keyWords);
-        if (props.keyWords.trim() === "") {
+        console.log("keyWords: " + keyWords);
+        if (keyWords.trim() === "") {
             setLoading(true);
             getProductPage(pageNow - 1, 6)
                 .then((data) => {
@@ -47,7 +50,22 @@ const List: React.FC<Props> = (props: Props) => {
                     setLoading(false);
                 });
         }
-    }, [pageNow, props.keyWords]);
+    }, [pageNow, keyWords]);
+
+
+    useEffect(() => {
+        if (keyWords.trim() === "") {
+            setLoading(true);
+            getProductByCategory(categoryId)
+                .then((data) => {
+                    setProducts(data);
+                    setLoading(false);
+                }).catch((err) => {
+                    setError(err.message || "Lỗi tải dữ liệu");
+                    setLoading(false);
+                });
+        }
+    }, [categoryId]);
 
 
     const changePage = (page: number) => {

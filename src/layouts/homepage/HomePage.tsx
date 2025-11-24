@@ -1,15 +1,13 @@
 import Banner from "./components/Banner"
 import Carousel from "./components/Carousel"
 import List from '../product/List'
-interface Props {
-    keyWords: string;
-}
-const HomePage: React.FC<Props> = (props: Props) => {
+
+const HomePage: React.FC = () => {
     return (
         <div>
             <Banner />
             <Carousel />
-            <List keyWords={props.keyWords} />
+            <List />
         </div>
     )
 }
