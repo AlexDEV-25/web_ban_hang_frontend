@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import type { Category } from "../../../models/Category";
 import { AppContext } from "../../../AppContext";
+import { Link } from "react-router-dom";
 interface Props {
     category: Category; // ✅ chỉ nhận 1 sản phẩm duy nhất
 }
@@ -12,7 +13,7 @@ const CategoryProperties: React.FC<Props> = ({ category }) => {
     const { setCategoryId } = ctx;
     return (
         <>
-            <li><a onClick={() => setCategoryId(category.id)} className="dropdown-item" href="#">{category.categoryName}</a></li>
+            <li><Link onClick={() => setCategoryId(category.id)} className="dropdown-item" to="#">{category.categoryName}</Link></li>
         </>
     )
 };

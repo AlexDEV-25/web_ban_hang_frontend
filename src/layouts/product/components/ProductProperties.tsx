@@ -1,50 +1,28 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "../../../models/Product";
-import { getOneThumbnailForOneProduct } from "../../../layouts/api/ThumbnailApi";
-import type { Thumbnail } from "../../../models/Thumbnail";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../../../AppContext";
 interface Props {
     product: Product; // ✅ chỉ nhận 1 sản phẩm duy nhất
 }
 
 const ProductProperties: React.FC<Props> = ({ product }) => {
-    const [thumbnail, setThumbnail] = useState<Thumbnail>();
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    useEffect(() => {
-        // Gọi API
-        getOneThumbnailForOneProduct(product.id)
-            .then((thumbnail) => {
-                setThumbnail(thumbnail);
-                setLoading(false);
-            })
-            .catch((err) => {
-                setError(err.message || "Lỗi tải dữ liệu");
-                setLoading(false);
-            });
-    }, []); // chỉ gọi 1 lần khi component mount
+    const ctx = useContext(AppContext);
+    if (!ctx) return null;
 
-
-    if (loading) {
-        return <div className="text-center mt-5">Đang tải dữ liệu...</div>;
-    }
-
-    if (error) {
-        return <div className="text-danger text-center mt-5">Lỗi: {error}</div>;
-    }
-    let link: string = "https://ericavietnam.com/wp-content/uploads/2024/09/O1CN01rEbPin24qUO0Iwz6z_4198917442-0-cib.jpg";
-    if (thumbnail && thumbnail.link) {
-        link = thumbnail.link;
-    }
-
+    const { setProductId } = ctx;
     return (
         <div className="col-12 col-sm-6 col-md-4 col-lg-3">
             <div className="card h-100 shadow-sm border-0 product-card">
-                <img
-                    src={link}
-                    className="card-img-top"
-                    alt={product.productName}
-                    style={{ height: "250px", objectFit: "cover" }}
-                />
+                <Link onClick={() => setProductId(product.id)} to={"/product/" + product.id}>
+                    <img
+                        src={product.productImage}
+                        className="card-img-top"
+                        alt={product.productName}
+                        style={{ height: "250px", objectFit: "cover" }}
+                    />
+                </Link>
                 <div className="card-body d-flex flex-column">
                     <h5 className="card-title text-dark fw-bold">{product.productName}</h5>
                     <p className="card-text text-muted small">{product.description}</p>

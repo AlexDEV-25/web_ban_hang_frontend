@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import type { Product } from "../../../models/Product";
 import { get3Product } from "../../../layouts/api/ProductApi";
 import type { Thumbnail } from "../../../models/Thumbnail";
-import { getOneThumbnailForOneProduct } from "../../../layouts/api/ThumbnailApi";
 
 const Carousel: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
-    const [thumbnails, setThumbnails] = useState<Thumbnail[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -15,7 +13,6 @@ const Carousel: React.FC = () => {
             .then((products) => {
                 setProducts(products);
                 setLoading(false);
-                getthumbnail(products);
             })
             .catch((err) => {
                 setError(err.message || "Lỗi tải dữ liệu");
@@ -23,19 +20,6 @@ const Carousel: React.FC = () => {
             });
     }, []);
 
-    function getthumbnail(products: Product[]) {
-        if (products.length > 0) {
-            products.forEach((product) => {
-                getOneThumbnailForOneProduct(product.id)
-                    .then((thumbnail) => {
-                        setThumbnails((prevThumbnails: Thumbnail[]) => [...prevThumbnails, thumbnail]);
-                    })
-                    .catch((err) => {
-                        setError(err.message || "Lỗi tải hình ảnh");
-                    });
-            });
-        }
-    }
     if (loading) {
         return <div className="text-center mt-5">Đang tải dữ liệu...</div>;
     }
@@ -60,9 +44,9 @@ const Carousel: React.FC = () => {
                         >
                             <div className="row align-items-center">
                                 <div className="col-5 text-center">
-                                    {thumbnails[index] ? (
+                                    {product.productImage ? (
                                         <img
-                                            src={thumbnails[index].link}
+                                            src={product.productImage}
                                             alt={product.productName}
                                             style={{ width: "150px" }}
                                             className="float-end"

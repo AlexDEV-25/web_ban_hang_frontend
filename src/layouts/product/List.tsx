@@ -37,8 +37,6 @@ const List: React.FC = () => {
     }, [keyWords]);
 
     useEffect(() => {
-        console.log("pageNow: " + pageNow);
-        console.log("keyWords: " + keyWords);
         if (keyWords.trim() === "") {
             setLoading(true);
             getProductPage(pageNow - 1, 6)
@@ -54,7 +52,7 @@ const List: React.FC = () => {
 
 
     useEffect(() => {
-        if (keyWords.trim() === "") {
+        if (categoryId !== 0) {
             setLoading(true);
             getProductByCategory(categoryId)
                 .then((data) => {

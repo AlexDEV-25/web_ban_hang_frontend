@@ -18,10 +18,5 @@ export async function getAllThumbnailForOneProduct(id: number): Promise<Thumbnai
     return listThumbnail as Thumbnail[];
 }
 
-export async function getOneThumbnailForOneProduct(id: number): Promise<Thumbnail> {
-    let thumbnail: Thumbnail | null = null;
-    const listThumbnail = await getAllThumbnailForOneProduct(id);
-    thumbnail = listThumbnail[0];
-    return thumbnail;
-}
+
 
